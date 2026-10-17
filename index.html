@@ -6,6 +6,13 @@
     <title>Lift Sales Progress Monitoring Dashboard</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- EmailJS SDK CDN -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("L-CcShK10cZm_B0Yd"); // Apnar Public Key
+        })();
+    </script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -14,7 +21,7 @@
 
     <div class="max-w-7xl mx-auto space-y-8">
         
-        <!-- Header Banner with Guidelines Trigger Button -->
+        <!-- Header Banner -->
         <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 md:p-8 rounded-2xl border border-indigo-500/30 shadow-2xl">
             <div class="absolute -top-10 -right-10 w-48 h-48 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
             <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -27,7 +34,6 @@
                 </div>
                 
                 <div class="flex items-center gap-4 flex-wrap">
-                    <!-- Guidelines Modal Button -->
                     <button onclick="openGuidelinesModal()" class="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                         View Sales Guidelines & Briefing
@@ -45,56 +51,34 @@
 
         <!-- Management Summary Cards (KPIs) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-xl border border-slate-700/50 border-l-4 border-l-indigo-500 shadow-lg hover:border-slate-600 transition">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
-                    <span>Active Projects</span>
-                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                </div>
+            <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-xl border border-slate-700/50 border-l-4 border-l-indigo-500 shadow-lg">
+                <span class="text-slate-400 text-xs font-medium">Active Projects</span>
                 <div id="totalProjects" class="text-3xl font-bold text-white mt-2">0</div>
-                <span class="text-[10px] text-slate-500 mt-1 block">Under active discussion</span>
             </div>
-
-            <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-xl border border-slate-700/50 border-l-4 border-l-sky-500 shadow-lg hover:border-slate-600 transition">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
-                    <span>Total Lifts Demand</span>
-                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4-4m0 0l4 4m-4-4v18"></path></svg>
-                </div>
+            <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-xl border border-slate-700/50 border-l-4 border-l-sky-500 shadow-lg">
+                <span class="text-slate-400 text-xs font-medium">Total Lifts Demand</span>
                 <div id="totalLifts" class="text-3xl font-bold text-white mt-2">0</div>
-                <span class="text-[10px] text-slate-500 mt-1 block">Total units across pipeline</span>
             </div>
-
-            <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-xl border border-slate-700/50 border-l-4 border-l-amber-500 shadow-lg hover:border-slate-600 transition">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
-                    <span>Confirmed Lifts</span>
-                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
+            <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-xl border border-slate-700/50 border-l-4 border-l-amber-500 shadow-lg">
+                <span class="text-slate-400 text-xs font-medium">Confirmed Lifts</span>
                 <div id="confirmedLifts" class="text-3xl font-bold text-white mt-2">0</div>
-                <span class="text-[10px] text-slate-500 mt-1 block">Approved quotations</span>
             </div>
-
-            <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-xl border border-slate-700/50 border-l-4 border-l-emerald-500 shadow-lg hover:border-slate-600 transition">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
-                    <span>Orders Received</span>
-                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                </div>
+            <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-xl border border-slate-700/50 border-l-4 border-l-emerald-500 shadow-lg">
+                <span class="text-slate-400 text-xs font-medium">Orders Received</span>
                 <div id="ordersReceived" class="text-3xl font-bold text-white mt-2">0</div>
-                <span class="text-[10px] text-slate-500 mt-1 block">Purchase order secured</span>
             </div>
         </div>
 
         <!-- Add New Project Form -->
         <div class="bg-slate-800/60 backdrop-blur-md p-6 rounded-2xl border border-slate-700/50 shadow-xl">
-            <h2 class="text-base font-semibold text-slate-200 mb-4 flex items-center gap-2">
-                <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Add New Lift Opportunity
-            </h2>
+            <h2 class="text-base font-semibold text-slate-200 mb-4">Add New Lift Opportunity</h2>
             <form id="projectForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <input type="text" id="salesperson" placeholder="Salesperson Name" required class="bg-slate-900/80 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 <input type="text" id="customerName" placeholder="Customer Name" required class="bg-slate-900/80 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 <input type="text" id="projectName" placeholder="Project Name & Location" required class="bg-slate-900/80 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                <input type="text" id="contactPerson" placeholder="Contact Person & Phone" required class="bg-slate-900/80 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <input type="text" id="contactPerson" placeholder="Contact Person & Phone (e.g. 017xxxxxxxx)" required class="bg-slate-900/80 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 <input type="number" id="liftQty" placeholder="Lift Requirement (Qty)" required class="bg-slate-900/80 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                <input type="text" id="liftDetails" placeholder="Lift Size & Tech Details" required class="bg-slate-900/80 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <input type="text" id="liftDetails" placeholder="Lift Capacity & Details (e.g. 630kg, 8 Persons)" required class="bg-slate-900/80 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 <select id="status" class="bg-slate-900/80 border border-slate-700 text-slate-200 p-2.5 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                     <option value="Initial Contact / Inquiry">Initial Contact / Inquiry</option>
                     <option value="Quotation / Negotiation">Quotation / Negotiation</option>
@@ -106,7 +90,7 @@
                 
                 <div class="sm:col-span-2 lg:col-span-4 flex justify-end mt-2">
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-6 py-2.5 rounded-lg text-xs transition duration-200 shadow-lg shadow-indigo-600/20">
-                        + Add Opportunity Record
+                        + Add Opportunity & Send Alert (If Confirmed)
                     </button>
                 </div>
             </form>
@@ -125,9 +109,9 @@
                             <th class="py-3.5 px-4 font-semibold">Sl</th>
                             <th class="py-3.5 px-4 font-semibold">Salesperson</th>
                             <th class="py-3.5 px-4 font-semibold">Customer & Project</th>
-                            <th class="py-3.5 px-4 font-semibold">Contact Details</th>
+                            <th class="py-3.5 px-4 font-semibold">Contact & Phone</th>
                             <th class="py-3.5 px-4 font-semibold text-center">Qty</th>
-                            <th class="py-3.5 px-4 font-semibold">Technical Details</th>
+                            <th class="py-3.5 px-4 font-semibold">Capacity & Tech Details</th>
                             <th class="py-3.5 px-4 font-semibold">Status</th>
                             <th class="py-3.5 px-4 font-semibold">Target Date</th>
                             <th class="py-3.5 px-4 font-semibold text-right">Action</th>
@@ -142,171 +126,33 @@
 
     </div>
 
-    <!-- GUIDELINES MODAL (Opens when clicking the top button) -->
+    <!-- GUIDELINES MODAL -->
     <div id="guidelinesModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-7xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 space-y-6">
-            
-            <!-- Modal Header -->
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                        Official Sales Guidelines & Briefing Reference
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1">Direct reference document extracts for monitoring, status standards, and KPIs.</p>
-                </div>
-                <button onclick="closeGuidelinesModal()" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-2 rounded-xl text-xs font-semibold transition">
-                    ✕ Close
-                </button>
+                <h2 class="text-xl font-bold text-white">Official Sales Guidelines & Briefing Reference</h2>
+                <button onclick="closeGuidelinesModal()" class="text-slate-400 hover:text-white bg-slate-800 px-3 py-1.5 rounded-xl text-xs">✕ Close</button>
             </div>
-
-            <!-- Modal Content Grid (3 PDF Sections - Exact Wording) -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                <!-- 2. Items to Monitor -->
-                <div class="bg-slate-800/60 backdrop-blur-md p-6 rounded-2xl border border-slate-700/50 shadow-lg">
-                    <div class="flex items-center gap-2 mb-4 border-b border-slate-700/60 pb-3">
-                        <span class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                        </span>
-                        <h3 class="text-sm font-bold text-white">2. Items to Monitor</h3>
-                    </div>
-                    <div class="space-y-3.5 text-xs text-slate-300">
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Customer and project details</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Customer/company name, project name, site location, contact person and phone number[cite: 1]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Lift requirement</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Number of lifts, passenger or cargo lift, capacity (kg/persons), number of floors/stops, speed, and other specifications[cite: 1]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Lift size and technical details</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Car dimensions, shaft size, door opening, lift type, machine room or machine-room-less (MRL), and special requirements[cite: 2]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Status of conversation</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Initial inquiry, meeting scheduled, technical discussion, quotation submitted, negotiation, follow-up, or pending[cite: 2]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Target confirmation date</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Expected date the customer will approve the quotation or confirm the order[cite: 2]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Confirmed</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Yes/No/Pending[cite: 2]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Order placed</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Yes/No; include purchase order (PO) number and order date[cite: 2]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Target site delivery date</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Expected date the lift equipment will arrive at the project site[cite: 2]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Next action and remarks</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Next follow-up date, pending issue, competitor information, price negotiation, or reason for delay[cite: 2]</p>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs text-slate-300">
+                <div class="bg-slate-800/60 p-5 rounded-xl border border-slate-700/50">
+                    <h3 class="font-bold text-white mb-2">2. Items to Monitor</h3>
+                    <p class="text-slate-400">Customer name, project name, location, contact phone, lift quantity, capacity, technical specifications, conversation status, target dates, and delivery timelines[cite: 1, 2].</p>
                 </div>
-
-                <!-- 3. Suggested Sales Status Categories -->
-                <div class="bg-slate-800/60 backdrop-blur-md p-6 rounded-2xl border border-slate-700/50 shadow-lg">
-                    <div class="flex items-center gap-2 mb-4 border-b border-slate-700/60 pb-3">
-                        <span class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 11h.01M7 15h.01M11 7h8M11 11h8M11 15h8"></path></svg>
-                        </span>
-                        <h3 class="text-sm font-bold text-white">3. Suggested Sales Status Categories</h3>
-                    </div>
-                    <p class="text-xs text-slate-400 mb-4 italic">Use consistent status options so management can compare progress across all salespeople[cite: 2].</p>
-                    <div class="space-y-4 text-xs text-slate-300">
-                        <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
-                            <span class="font-semibold text-amber-400 block mb-0.5">Initial Contact / Inquiry</span>
-                            <p class="text-slate-400">Customer identified; requirements being collected[cite: 2].</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
-                            <span class="font-semibold text-sky-400 block mb-0.5">Quotation / Negotiation</span>
-                            <p class="text-slate-400">Technical proposal or price quotation submitted; follow-up ongoing[cite: 2].</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
-                            <span class="font-semibold text-indigo-400 block mb-0.5">Awaiting Confirmation</span>
-                            <p class="text-slate-400">Expected confirmation date is set; customer decision pending[cite: 2].</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
-                            <span class="font-semibold text-emerald-400 block mb-0.5">Confirmed / Order Placed</span>
-                            <p class="text-slate-400">Customer has confirmed; track PO receipt separately from confirmation[cite: 2].</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
-                            <span class="font-semibold text-purple-400 block mb-0.5">Delivery Planning</span>
-                            <p class="text-slate-400">Order secured; monitor equipment readiness and targeted site delivery[cite: 2].</p>
-                        </div>
-                    </div>
+                <div class="bg-slate-800/60 p-5 rounded-xl border border-slate-700/50">
+                    <h3 class="font-bold text-white mb-2">3. Suggested Sales Status Categories</h3>
+                    <p class="text-slate-400">Initial Contact / Inquiry, Quotation / Negotiation, Awaiting Confirmation, Confirmed / Order Placed, Delivery Planning[cite: 2].</p>
                 </div>
-
-                <!-- 4. Management Summary by Salesperson -->
-                <div class="bg-slate-800/60 backdrop-blur-md p-6 rounded-2xl border border-slate-700/50 shadow-lg">
-                    <div class="flex items-center gap-2 mb-4 border-b border-slate-700/60 pb-3">
-                        <span class="p-1.5 rounded-lg bg-sky-500/10 text-sky-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        </span>
-                        <h3 class="text-sm font-bold text-white">4. Management Summary by Salesperson</h3>
-                    </div>
-                    <p class="text-xs text-slate-400 mb-4 italic">For weekly sales review meetings, monitor these figures for each salesperson[cite: 2, 3]:</p>
-                    <div class="space-y-3.5 text-xs text-slate-300">
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Total active projects</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Number of projects under discussion[cite: 2]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Total lift demand</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Total quantity of lifts across active projects[cite: 2, 3]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Quotations submitted</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Number of projects with quotations issued[cite: 3]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Expected confirmations</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Number of projects expected to confirm this month[cite: 3]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Confirmed lifts</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Total quantity of lifts confirmed by customers[cite: 3]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Orders received</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Total quantity of lifts with purchase orders received[cite: 3]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Pending confirmations overdue</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Projects past their targeted confirmation date[cite: 3]</p>
-                        </div>
-                        <div>
-                            <span class="font-semibold text-slate-100 block">Upcoming site deliveries</span>
-                            <p class="text-slate-400 mt-0.5 leading-relaxed">Orders scheduled for delivery within the next 30 days[cite: 3]</p>
-                        </div>
-                    </div>
+                <div class="bg-slate-800/60 p-5 rounded-xl border border-slate-700/50">
+                    <h3 class="font-bold text-white mb-2">4. Management Summary by Salesperson</h3>
+                    <p class="text-slate-400">Monitor active projects, total lift demand, quotations submitted, expected confirmations, confirmed lifts, orders received, overdue items, and upcoming site deliveries[cite: 2, 3].</p>
                 </div>
-
-            </div>
-
-            <div class="flex justify-end pt-4 border-t border-slate-800">
-                <button onclick="closeGuidelinesModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2 rounded-xl text-xs font-medium transition">
-                    Got it, Return to Dashboard
-                </button>
             </div>
         </div>
     </div>
 
-    <!-- Script to handle modal toggle and project management -->
     <script>
-        function openGuidelinesModal() {
-            document.getElementById('guidelinesModal').classList.remove('hidden');
-        }
-        function closeGuidelinesModal() {
-            document.getElementById('guidelinesModal').classList.add('hidden');
-        }
+        function openGuidelinesModal() { document.getElementById('guidelinesModal').classList.remove('hidden'); }
+        function closeGuidelinesModal() { document.getElementById('guidelinesModal').classList.add('hidden'); }
     </script>
     <script src="script.js"></script>
 </body>
